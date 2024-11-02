@@ -63,7 +63,7 @@ async def suggest_movie(context: CallbackContext):
 
 
 # Send movie updates to the channel as captioned images with rating and button for details
-async def send_movie_update(context: CallbackContext):
+async def send_movie_update(update: Update, context: CallbackContext):
     movie_updates = fetch_movie_data()
     for movie in movie_updates:
         caption = (
@@ -189,8 +189,8 @@ async def check_for_new_movies(context: CallbackContext):
 
 
 # Register handlers
-app.add_handler(CommandHandler("start", lambda update, context: send_movie_update(context)))
-app.add_handler(CommandHandler("suggestion", lambda update, context: suggest_movie(context)))
+app.add_handler(CommandHandler("start", send_movie_update))
+app.add_handler(CommandHandler("suggestion", suggest_movie))
 app.add_handler(CommandHandler("check_liveness", check_bot_liveness))
 app.add_handler(CallbackQueryHandler(more_details, pattern="more_details:"))
 
