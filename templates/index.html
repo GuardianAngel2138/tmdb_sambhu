@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bot Activity Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bot Activity Dashboard</h1>
+
+        <!-- Real-Time Bot Activities -->
+        <h2>Recent Activities</h2>
+        <div id="activityLog">
+            <p>Loading recent activities...</p>
+        </div>
+
+        <!-- User Table -->
+        <h2>Users</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Last Active</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                <!-- Data will be dynamically added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchActivities() {
+            const response = await fetch('/get_recent_activities');
+            const activities = await response.json();
+            const log = document.getElementById('activityLog');
+            log.innerHTML = activities.map(activity => `<p>${activity.timestamp}: ${activity.action} - ${activity.details}</p>`).join('');
+        }
+
+        async function fetchUsers() {
+            const response = await fetch('/get_users');
+            const users = await response.json();
+            const userTable = document.getElementById('userTable');
+            userTable.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user._id}</td>
+                    <td>${user.username || 'N/A'}</td>
+                    <td>${user.last_active || 'N/A'}</td>
+                </tr>
+            `).join('');
+        }
+
+        fetchActivities();
+        fetchUsers();
+    </script>
+</body>
+</html>
